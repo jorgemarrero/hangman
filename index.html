@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hangman</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row centrado">
+            <div class="row">
+                <div class="col-lg-12 botones-abecedario">
+                    <h1>HANGMAN GAME</h1>
+                    <h2>The best logic game, this time is about countries (in spanish)</h2>
+                    <div class="contador-partidas">
+                        <p>Ganadas: <span id="historico-ganadas">0</span></p>
+                        <p>Perdidas: <span id="historico-perdidas">0</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 botones-abecedario">
+                    <button>A</button>
+                    <button>B</button>
+                    <button>C</button>
+                    <button>D</button>
+                    <button>E</button>
+                    <button>F</button>
+                    <button>G</button>
+                    <button>H</button>
+                    <button>I</button>
+                    <button>J</button>
+                    <button>K</button>
+                    <button>L</button>
+                    <button>M</button>
+                    <button>N</button>
+                    <button>Ñ</button>
+                    <button>O</button>
+                    <button>P</button>
+                    <button>Q</button>
+                    <button>R</button>
+                    <button>S</button>
+                    <button>T</button>
+                    <button>U</button>
+                    <button>V</button>
+                    <button>W</button>
+                    <button>Y</button>
+                    <button>Z</button>
+                </div>
+
+                <div class="vidas">Tienes <span id="vidas">8</span> vidas</div>
+                <div class="timer">Tiempo restante: <span id="tiempo-restante"></span> segundos</div>
+                <button id="pista">PISTA</button>
+            </div>
+            <script type="text/javascript" src="script.js"></script>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+button {
+    background-color: #d85454;
+    border: none;
+    color: white;
+    padding: 10px 26px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 8px 4px;
+    cursor: pointer;
+}
+button:disabled {
+    background-color: #9b9b9b;
+}
+
+button#pista {
+    background-color: cadetblue;
+}
+
+button#pista:disabled {
+    background-color: #9b9b9b;
+}
+
+
+.centrado {
+    text-align: center;
+}
+
+.pais-revelar {
+    margin-top: 42px;
+    font-size: 60px;
+    letter-spacing: 8px;
+}
+
+.contador-partidas{
+    position: absolute;
+    right: 15px;
+    top: 20px;
+}
+
+.vidas {
+    padding-top: 150px;
+}
+
