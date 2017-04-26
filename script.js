@@ -1,201 +1,245 @@
-var paises = ["EGIPTO", "ESPAÑA", "FRANCIA", "ESTONIA", "LITUANIA", "MARRUECOS", "KENIA", "RUSIA", "CHINA", "LA INDIA", "ARGENTINA", "VENEZUELA", "CHILE", "CUBA", "QATAR", "ESTADOS UNIDOS"];
+$(document).ready(function () {
+    var paises = ["EGIPTO", "ESPAÑA", "FRANCIA", "ESTONIA", "LITUANIA", "MARRUECOS", "KENIA", "RUSIA", "CHINA", "LA INDIA", "ARGENTINA", "VENEZUELA", "CHILE", "CUBA", "QATAR", "ESTADOS UNIDOS"];
 
-var status = {
-    countries: [
-        {
-            name: "EGIPTO",
-            clue: "Pirámides"
+    var status = {
+        countries: [
+            {
+                name: "EGIPTO",
+                clue: "Pirámides"
         },
-        {
-            name: "ESPAÑA",
-            clue: "Toros"
+            {
+                name: "ESPAÑA",
+                clue: "Toros"
         },
-        {
-            name: "FRANCIA",
-            clue: "Champagne"
+            {
+                name: "FRANCIA",
+                clue: "Champagne"
         },
-        {
-            name: "ESTONIA",
-            clue: "Tallin"
+            {
+                name: "ESTONIA",
+                clue: "Tallin"
         },
-        {
-            name: "LITUANIA",
-            clue: "Vilna"
+            {
+                name: "LITUANIA",
+                clue: "Vilna"
         },
-        {
-            name: "MARRUECOS",
-            clue: "Té verde"
+            {
+                name: "MARRUECOS",
+                clue: "Té verde"
         },
-        {
-            name: "KENYA",
-            clue: "Safari"
+            {
+                name: "KENYA",
+                clue: "Safari"
         },
-        {
-            name: "RUSIA",
-            clue: "Vodka"
+            {
+                name: "RUSIA",
+                clue: "Vodka"
         },
-        {
-            name: "CHINA",
-            clue: "Arroz tres delicias"
+            {
+                name: "CHINA",
+                clue: "Arroz tres delicias"
         },
-        {
-            name: "LA INDIA",
-            clue: "Especias"
+            {
+                name: "LA INDIA",
+                clue: "Especias"
         },
-        {
-            name: "ARGENTINA",
-            clue: "Asado"
+            {
+                name: "ARGENTINA",
+                clue: "Asado"
         },
-        {
-            name: "VENEZUELA",
-            clue: "Maduro"
+            {
+                name: "VENEZUELA",
+                clue: "Maduro"
         },
-        {
-            name: "CHILE",
-            clue: "Santiago"
+            {
+                name: "CHILE",
+                clue: "Santiago"
         },
-        {
-            name: "CUBA",
-            clue: "Fidel"
+            {
+                name: "CUBA",
+                clue: "Fidel"
         },
-        {
-            name: "QATAR",
-            clue: "Jeque"
+            {
+                name: "QATAR",
+                clue: "Jeque"
         },
-        {
-            name: "ESTADOS UNIDOS",
-            clue: "Hamgurguesas"
+            {
+                name: "ESTADOS UNIDOS",
+                clue: "Hamgurguesas"
         }
     ]
-}
-
-
-
-var paisAleatorio = paises[Math.floor(Math.random() * paises.length)];
-console.log(paisAleatorio);
-
-/* ELEMENTOS AÑADIDOS */
-var paisRevelado = document.createElement("p");
-var body = document.querySelector(".centrado");
-body.appendChild(paisRevelado);
-paisRevelado.classList.add("pais-revelar");
-
-
-for (var i = 0; i < paisAleatorio.length; i++) {
-    var letraPais = document.createElement("span");
-    if (paisAleatorio[i] == " ") {
-        letraPais.innerHTML = (" ");
-    } else {
-        letraPais.innerHTML = ("_");
     }
-    paisRevelado.appendChild(letraPais);
-}
 
 
-var botonesAbecedario = document.querySelectorAll(".botones-abecedario > button");
-var vidas = document.getElementById("vidas");
+
+    /* PARTIDA ACTUAL */
+    var partidaActual = {
+        numeroVidas: 10,
+        tiempo: 100,
+        toFind: paises[Math.floor(Math.random() * paises.length)],
+        finding: [],
+        pista: true,
+        letrasUsadas: []
+    }
+
+    if (localStorage.getItem("partida") != null) {
+        partidaActual = JSON.parse(localStorage.getItem("partida"));
+        console.log(partidaActual);
+    }
+    /**/
+
+    console.log(partidaActual.toFind);
+    $("#vidas").text(partidaActual.numeroVidas);
+    var $finding = $("<p>", {
+        "class": "finding"
+    });
+
+    /* HISTORICO */
+    var historico = {
+        ganadas: 0,
+        perdidas: 0
+    }
+    if (localStorage.getItem("historico") != null) {
+        historico = JSON.parse(localStorage.getItem("historico"));
+        $("#historico-ganadas").text(historico.ganadas);
+        $("#historico-perdidas").text(historico.perdidas);
+    }
+    /**/
 
 
-for (var i = 0; i < botonesAbecedario.length; i++) {
-    botonesAbecedario[i].addEventListener("click", letraClick);
-}
 
-function letraClick(evento) {
-    var error = true;
-    console.log(evento.target.innerHTML);
-    for (var j = 0; j < paisAleatorio.length; j++) {
-        if (paisAleatorio[j] == evento.target.innerHTML) {
-            console.log("COINCIDE");
-            var descubrirLetra = document.querySelectorAll(".pais-revelar > span")[j];
-            descubrirLetra.innerHTML = evento.target.innerHTML;
-            error = false;
+    /* ELEMENTO A BUSCAR */
+    $(".centrado").append($finding);
 
-            if (paisRevelado.innerText == paisAleatorio) {
-                alert("Has ganado");
-                sumarGanada();
+    for (var i = 0; i < partidaActual.toFind.length; i++) {
+        if (partidaActual.finding.length > 0 + i) {
+
+        } else {
+            if (partidaActual.toFind[i] == " ") {
+                partidaActual.finding[i] = " ";
+            } else {
+                partidaActual.finding[i] = "-";
             }
-            console.log(paisRevelado.innerText);
-            console.log(paisAleatorio);
         }
     }
 
-    if (error == true) {
-        if (partidaActual.numeroVidas > 1) {
-            --partidaActual.numeroVidas;
-            vidas.innerHTML = partidaActual.numeroVidas;
-        } else {
-            partidaActual.numeroVidas = 0;
-            vidas.innerHTML = partidaActual.numeroVidas;
-            alert("Has perdido");
-            sumarPerdida();
+    $finding.text(partidaActual.finding.join(""));
+    console.log(partidaActual);
+    /**/
+
+    /* TIEMPO RESTANTE */
+    var timer;
+    countDown();
+
+    function countDown() {
+        $tiempoRestante = $("#tiempo-restante");
+        $tiempoRestante.text(partidaActual.tiempo);
+
+        timer = setInterval(function () {
+            if (partidaActual.tiempo == 0) {
+                sumarPerdida();
+                clearInterval(timer);
+            } else {
+                partidaActual.tiempo = partidaActual.tiempo - 1;
+                $tiempoRestante.text(partidaActual.tiempo);
+            }
+            localStorage.setItem("partida", JSON.stringify(partidaActual));
+        }, 1000);
+    }
+    /**/
+
+
+    /* PRUEBA LETRAS Y BUSCA RESULTADO */
+    for (var i = 0; i < $(".botones-abecedario > button").length; i++) {
+        $(".botones-abecedario > button").eq(i).on('click', function () {
+            letraClick(this);
+        });
+
+        for (var j = 0; j < partidaActual.letrasUsadas.length; j++) {
+            if (($(".botones-abecedario > button").eq(i).text()) == partidaActual.letrasUsadas[j]) {
+                $(".botones-abecedario > button").eq(i).attr("disabled", true);
+            }
         }
     }
 
-    evento.target.disabled = true;
-}
 
-var partidaActual = {
-    numeroVidas: vidas.innerHTML
-}
-var historico = {
-    ganadas: 0,
-    perdidas: 0
-}
+    function letraClick(evento) {
+        var error = true;
+        console.log(evento.innerHTML);
 
-function sumarGanada() {
-    ++historico.ganadas;
-    historicoGanadas.innerHTML = historico.ganadas;
-    localStorage.setItem("historico", JSON.stringify(historico));
-}
+        for (var i = 0; i < partidaActual.toFind.length; i++) {
+            if (partidaActual.toFind[i] == evento.innerHTML) {
+                console.log("COINCIDE");
+                partidaActual.finding[i] = evento.innerHTML;
+                $finding.text(partidaActual.finding.join(""));
 
-function sumarPerdida() {
-    ++historico.perdidas;
-    historicoPerdidas.innerHTML = historico.perdidas;
-    localStorage.setItem("historico", JSON.stringify(historico));
-}
-
-if (localStorage.getItem("historico") != null) {
-    historico = JSON.parse(localStorage.getItem("historico"));
-}
-
-var historicoGanadas = document.getElementById("historico-ganadas");
-var historicoPerdidas = document.getElementById("historico-perdidas");
-
-historicoGanadas.innerHTML = historico.ganadas;
-historicoPerdidas.innerHTML = historico.perdidas;
-
-
-/* TIEMPO RESTANTE */
-var tiempoRestanteHTML = document.getElementById("tiempo-restante");
-var tiempoLimite = 60;
-tiempoRestanteHTML.innerHTML = tiempoLimite;
-countDown(tiempoLimite);
-var timer;
-function countDown(tiempo) {
-    timer = setInterval(function () {
-        
-        if (tiempo == 0) {
-            alert("Has perdido");
-            sumarPerdida();
-            clearInterval(timer);
-        } else {
-            tiempo = tiempo - 1;
-            tiempoRestanteHTML.innerHTML = tiempo;
-            console.log("TIEMPO" + tiempo);
+                if ($finding[0].innerText == partidaActual.toFind) {
+                    sumarGanada();
+                }
+                error = false;
+            }
         }
 
-    }, 1000);
-}
+        if (error == true) {
+            if (partidaActual.numeroVidas > 1) {
+                --partidaActual.numeroVidas;
+            } else {
+                partidaActual.numeroVidas = 0;
+                sumarPerdida();
+            }
+            $("#vidas").text(partidaActual.numeroVidas);
+        }
+        evento.disabled = true;
 
-/* PISTA */
-var pistaHTML = document.getElementById("pista");
-pistaHTML.addEventListener("click", pistaClick);
+        partidaActual.letrasUsadas.push(evento.innerHTML);
+        console.log(partidaActual);
+    }
+    /**/
 
-function pistaClick(evento) {
-    console.log(evento.target.innerHTML);
-    clearInterval(timer);
-    tiempoRestanteHTML.innerHTML -= 10;
-    countDown(tiempoRestanteHTML.innerHTML);
+
+    /* PISTA */
+    if (!partidaActual.pista) {
+        $("#pista").attr("disabled", true);
+    }
+    $("#pista").on("click", function () {
+        pistaClick(this);
+    });
+
+    function pistaClick(evento) {
+        partidaActual.pista = false;
+        console.log(partidaActual);
+        console.log(evento.innerHTML);
+        clearInterval(timer);
+        countDown(($("#tiempo-restante").text()) - 10);
+        evento.disabled = true;
+    }
+    /**/
     
-    evento.target.disabled = true;
-}
+    /* REINICIAR */
+    $("#reiniciar").on("click", function () {
+        sumarPerdida();
+        location.reload();
+    });
+
+    function sumarGanada() {
+        $(".centrado").append($("<p>"), {
+            text: "VICTORIA"
+        });
+        alert("Has ganado");
+        ++historico.ganadas;
+        $("#historico-ganadas").text(historico.ganadas);
+        clearInterval(timer);
+        localStorage.removeItem("partida");
+        localStorage.setItem("historico", JSON.stringify(historico));
+    }
+
+    function sumarPerdida() {
+        alert("Has perdido");
+        ++historico.perdidas;
+        $("historico-perdidas").text(historico.perdidas);
+        clearInterval(timer);
+        localStorage.removeItem("partida");
+        localStorage.setItem("historico", JSON.stringify(historico));
+    }
+
+});
