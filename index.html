@@ -11,13 +11,22 @@
 <body>
     <div class="container">
         <div class="row centrado">
+            <div class="row pide-usuario">
+                <img src="img/logo.jpg" id="logo">
+                <p>Antes de jugar, debes decirnos un nombre de usuario</p>
+                <input type="text" id="nickname" name="firstname" placeholder="Tu nombre de usuario..">
+
+                <button id="a-jugar">¡A jugar!</button>
+            </div>
             <div class="row">
                 <div class="col-lg-12 botones-abecedario">
-                    <h1>HANGMAN GAME</h1>
-                    <h2>The best logic game, this time is about countries (in spanish)</h2>
+                    <img src="img/logo.jpg" id="logo">
+                    <h2>The best logic game, this time is about movies</h2>
                     <div class="contador-partidas">
                         <p>Ganadas: <span id="historico-ganadas">0</span></p>
                         <p>Perdidas: <span id="historico-perdidas">0</span></p>
+                        <p>Jugador: <span id="jugador">Jorge M</span></p>
+                        <button id="close-sesion">Cerrar sesión</button>
                     </div>
                 </div>
             </div>
@@ -37,6 +46,7 @@
                     <button>L</button>
                     <button>M</button>
                     <button>N</button>
+                    <button>Ñ</button>
                     <button>Ñ</button>
                     <button>O</button>
                     <button>P</button>

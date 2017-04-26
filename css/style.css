@@ -22,6 +22,9 @@ button#pista:disabled {
     background-color: #9b9b9b;
 }
 
+img#logo {
+    width: 600px;
+}
 
 .centrado {
     text-align: center;
@@ -31,6 +34,10 @@ button#pista:disabled {
     margin-top: 42px;
     font-size: 60px;
     letter-spacing: 8px;
+}
+
+.botones-abecedario {
+    padding-top: 40px;
 }
 
 .contador-partidas{
@@ -43,3 +50,43 @@ button#pista:disabled {
     padding-top: 150px;
 }
 
+.pide-usuario {
+    background-color: white;
+    position: fixed;
+    z-index: 1;
+    height: 100%;
+    width: 1200px;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+}
+.pide-usuario p {
+    font-weight: 600;
+    font-size: 16px;
+    padding-top: 60px;
+}
+
+.pide-usuario input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.pide-usuario button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pide-usuario button:hover {
+    background-color: #45a049;
+}
