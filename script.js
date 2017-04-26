@@ -5,18 +5,26 @@ var $finding = $("<p>", {
 });
 
 $(document).ready(function () {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     var paises = ["EGIPTO", "ESPAÑA", "FRANCIA", "ESTONIA", "LITUANIA", "MARRUECOS", "KENIA", "RUSIA", "CHINA", "LA INDIA", "ARGENTINA", "VENEZUELA", "CHILE", "CUBA", "QATAR", "ESTADOS UNIDOS"];
 
     /* PARTIDA NUEVA */
     var partidaActual = {
-        //        numeroVidas: 10,
-        //        tiempo: 100,
-        //        toFind: paises[Math.floor(Math.random() * paises.length)],
-        //        finding: [],
-        //        pista: true,
-        //        letrasUsadas: [],
-        //        ganadas: 0,
-        //        perdidas: 0,
         actual: "none",
         "Jorge M": {
             ganadas: 15,
@@ -24,7 +32,6 @@ $(document).ready(function () {
             toFind: "MADRID"
         }
     }
-
     /**/
 
     /* A JUGAR */
