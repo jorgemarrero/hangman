@@ -5,32 +5,31 @@ var $finding = $("<p>", {
 });
 
 $(document).ready(function () {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    var aleatorio = Math.floor(Math.random() * ($(".botones-abecedario > button").length));
+    console.log($(".botones-abecedario > button").eq(aleatorio).text());
+
+    var paginas = 1;
+    $.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
+        console.log(result);
+        console.log(result.totalResults);
+
+        paginas = Math.floor(Math.random() * (Math.floor(result.totalResults / 10) + 1));
+
+        $.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
+            console.log(Math.floor(Math.random() * (result.Search.length)));
+            partidaActual[$nickname].toFind = result.Search[Math.floor(Math.random() * (result.Search.length))].Title;
+            console.log(partidaActual);
+        });
+    });
+
+
+
+
     var paises = ["EGIPTO", "ESPAÑA", "FRANCIA", "ESTONIA", "LITUANIA", "MARRUECOS", "KENIA", "RUSIA", "CHINA", "LA INDIA", "ARGENTINA", "VENEZUELA", "CHILE", "CUBA", "QATAR", "ESTADOS UNIDOS"];
 
     /* PARTIDA NUEVA */
     var partidaActual = {
-        actual: "none",
-        "Jorge M": {
-            ganadas: 15,
-            perdidas: 20,
-            toFind: "MADRID"
-        }
+        actual: "none"
     }
     /**/
 
@@ -228,5 +227,7 @@ $(document).ready(function () {
             $(".botones-abecedario > button").eq(i).attr("disabled", true);
         }
     }
+
+
 
 });
