@@ -11,6 +11,15 @@
 <body>
     <div class="container">
         <div class="row centrado">
+            <div class="row invita-usuario">
+                <img src="img/logo.jpg" id="logo">
+                <p>Dinos el nombre de la persona que quieres retar</p>
+                <input type="text" id="nickname-invitado" name="firstname" placeholder="Su nombre de usuario..">
+                <input type="text" id="busqueda-invitado" name="firstname" placeholder="Película con la que quieres retar..">
+                
+                <button id="a-jugar-invitado">¡A jugar!</button>
+            </div>
+            
             <div class="row pide-usuario">
                 <img src="img/logo.jpg" id="logo">
                 <p>Antes de jugar, debes decirnos un nombre de usuario</p>
@@ -19,13 +28,14 @@
                 <button id="a-jugar">¡A jugar!</button>
             </div>
             <div class="row">
-                <div class="col-lg-12 botones-abecedario">
+                <div class="col-lg-12 informacion">
                     <img src="img/logo.jpg" id="logo">
                     <h2>The best logic game, this time is about movies</h2>
                     <div class="contador-partidas">
                         <p>Ganadas: <span id="historico-ganadas">0</span></p>
                         <p>Perdidas: <span id="historico-perdidas">0</span></p>
-                        <p>Jugador: <span id="jugador">Jorge M</span></p>
+                        <p>Jugador: <span id="jugador"></span></p>
+                        <button id="retar">Retar amigo</button>
                         <button id="close-sesion">Cerrar sesión</button>
                     </div>
                 </div>
@@ -56,13 +66,15 @@
                     <button>U</button>
                     <button>V</button>
                     <button>W</button>
+                    <button>X</button>
                     <button>Y</button>
                     <button>Z</button>
                 </div>
 
                 <div class="vidas">Tienes <span id="vidas">8</span> vidas</div>
                 <div class="timer">Tiempo restante: <span id="tiempo-restante"></span> segundos</div>
-                <button id="pista">PISTA</button><button id="reiniciar">REINICIAR</button>
+                <button id="pista">PISTA</button>
+                <button id="reiniciar">REINICIAR</button>
             </div>
             <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
             <script type="text/javascript" src="script.js"></script>

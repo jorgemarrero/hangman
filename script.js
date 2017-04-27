@@ -4,28 +4,12 @@ var $finding = $("<p>", {
     "class": "finding"
 });
 
+localStorage.removeItem("partida");
+
+
 $(document).ready(function () {
     var aleatorio = Math.floor(Math.random() * ($(".botones-abecedario > button").length));
     console.log($(".botones-abecedario > button").eq(aleatorio).text());
-
-    var paginas = 1;
-    $.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
-        console.log(result);
-        console.log(result.totalResults);
-
-        paginas = Math.floor(Math.random() * (Math.floor(result.totalResults / 10) + 1));
-
-        $.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
-            console.log(Math.floor(Math.random() * (result.Search.length)));
-            partidaActual[$nickname].toFind = result.Search[Math.floor(Math.random() * (result.Search.length))].Title;
-            console.log(partidaActual);
-        });
-    });
-
-
-
-
-    var paises = ["EGIPTO", "ESPAÑA", "FRANCIA", "ESTONIA", "LITUANIA", "MARRUECOS", "KENIA", "RUSIA", "CHINA", "LA INDIA", "ARGENTINA", "VENEZUELA", "CHILE", "CUBA", "QATAR", "ESTADOS UNIDOS"];
 
     /* PARTIDA NUEVA */
     var partidaActual = {
@@ -49,7 +33,7 @@ $(document).ready(function () {
             partidaActual[$nickname] = {};
             partidaActual[$nickname].numeroVidas = 10;
             partidaActual[$nickname].tiempo = 100;
-            partidaActual[$nickname].toFind = paises[Math.floor(Math.random() * paises.length)];
+            partidaActual[$nickname].toFind = [];
             partidaActual[$nickname].finding = [];
             partidaActual[$nickname].pista = true;
             partidaActual[$nickname].letrasUsadas = [];
@@ -58,7 +42,7 @@ $(document).ready(function () {
             console.log(partidaActual);
         }
 
-        juego();
+        peliculaDB(false, false);
     });
 
     /* CERRAR SESIÓN */
@@ -70,7 +54,7 @@ $(document).ready(function () {
 
     /* REINICIAR */
     $("#reiniciar").on("click", function () {
-        if (!($finding[0].innerText == partidaActual[$nickname].toFind)) {
+        if (!(partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join(""))) {
             ++partidaActual[$nickname].perdidas;
         }
         partidaActual[$nickname].numeroVidas = 10;
@@ -79,8 +63,33 @@ $(document).ready(function () {
         partidaActual[$nickname].finding = [];
         partidaActual[$nickname].pista = true;
         partidaActual[$nickname].letrasUsadas = [];
+        peliculaDB(true, false);
         localStorage.setItem("partida", JSON.stringify(partidaActual));
-        location.reload();
+
+
+    });
+
+    /* RETAR */
+    $("#retar").on("click", function () {
+        console.log("SIIIIIIII");
+        if (!(partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join(""))) {
+            ++partidaActual[$nickname].perdidas;
+        }
+
+        $(".invita-usuario").css("visibility", "visible");
+
+        $("#a-jugar-invitado").on("click", function () {
+            // TODO: función para preparar busqueda %20
+            $nickname = $("#nickname-invitado").val();
+            partidaActual[$nickname] = {};
+            partidaActual[$nickname].numeroVidas = 10;
+            partidaActual[$nickname].tiempo = 100;
+            partidaActual[$nickname].toFind = [];
+            partidaActual[$nickname].finding = [];
+            partidaActual[$nickname].pista = true;
+            partidaActual[$nickname].letrasUsadas = [];
+            peliculaDB(false, true);
+        });
     });
 
     /* COMPRUEBA SI EXISTE JUGANDO */
@@ -96,6 +105,170 @@ $(document).ready(function () {
     }
     /**/
 
+
+    function peliculaDB(reiniciar, retar) {
+        if (retar) {
+            var busqueda = [];
+            var indice = 0;
+            console.log($("#busqueda-invitado").val());
+            for (var i = 0; i < ($("#busqueda-invitado").val()).length; i++) {
+
+                if (($("#busqueda-invitado").val()[i]) != " ") {
+                    busqueda[i + indice] = ($("#busqueda-invitado").val()[i]);
+                } else {
+                    busqueda[i + indice] = "%";
+                    busqueda[i + 1 + indice] = "2";
+                    busqueda[i + 2 + indice] = "0";
+                    indice = indice + 2;
+                }
+            }
+            console.log(busqueda.join(""));
+            $.getJSON("http://www.omdbapi.com/?t=" + busqueda.join(""), function (result) {
+                console.log(result);
+                filtrandoPeliculas(result.Title, reiniciar);
+                $(".invita-usuario").css("visibility", "hidden");
+            });
+
+        } else {
+            $.when($.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
+                console.log('sucess');
+                console.log(result);
+                console.log(result.totalResults);
+
+                paginas = Math.floor(Math.random() * (Math.floor(result.totalResults / 10) + 1));
+            }, function () {
+                console.log('error');
+            })).then(function () {
+                console.log('get JSON ready!');
+
+                $.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
+                    console.log(result);
+                    console.log(Math.floor(Math.random() * (result.Search.length)));
+                    var peliculaFiltrar = result.Search[Math.floor(Math.random() * (result.Search.length))].Title;
+                    console.log(peliculaFiltrar);
+
+                    filtrandoPeliculas(peliculaFiltrar, reiniciar);
+
+                });
+            });
+        }
+    }
+
+    function filtrandoPeliculas(peliculaFiltrar, reiniciar) {
+
+        peliculaFiltrar = peliculaFiltrar.toUpperCase();
+        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
+        console.log(peliculaFiltrar);
+
+        var peliculaFiltrada = [];
+        // TODO: NO BORRAR ESPECIALES, MOSTRARLOS DIRECTAMENTE
+        for (var i = 0; i < peliculaFiltrar.length; i++) {
+
+            for (var j = 0; j < $(".botones-abecedario > button").length; j++) {
+
+                if ((peliculaFiltrar[i]) == ($(".botones-abecedario > button").eq(j).text())) {
+                    peliculaFiltrada[i] = peliculaFiltrar[i];
+
+                } else if ((peliculaFiltrar[i]) == " ") {
+                    peliculaFiltrada[i] = peliculaFiltrar[i];
+                }
+            }
+
+        }
+
+        var peliculaReFiltrada = [];
+
+        var indice = 0;
+        console.log(peliculaFiltrada);
+        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
+
+        for (var i = 0; i < peliculaFiltrada.length; i++) {
+            if (peliculaFiltrada[i] != undefined) {
+                peliculaReFiltrada[i - indice] = peliculaFiltrada[i];
+            } else {
+                ++indice;
+            }
+        }
+
+        partidaActual[$nickname].toFind = peliculaReFiltrada;
+        console.log(partidaActual[$nickname].toFind);
+
+        for (var i = 0; i < partidaActual[$nickname].toFind.length; i++) {
+            if (partidaActual[$nickname].toFind[i] == " ") {
+                partidaActual[$nickname].finding[i] = " ";
+            } else {
+                partidaActual[$nickname].finding[i] = "-";
+            }
+        }
+        console.log(partidaActual[$nickname].finding);
+
+        if (reiniciar) {
+            localStorage.setItem("partida", JSON.stringify(partidaActual));
+            location.reload();
+        } else {
+            juego();
+        }
+    }
+
+    function filtrandoPeliculasDos(peliculaFiltrar, reiniciar) {
+
+        peliculaFiltrar = peliculaFiltrar.toUpperCase();
+        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
+        console.log(peliculaFiltrar);
+
+        var peliculaFiltrada = [];
+        // TODO: NO BORRAR ESPECIALES, MOSTRARLOS DIRECTAMENTE
+        for (var i = 0; i < peliculaFiltrar.length; i++) {
+
+            for (var j = 0; j < $(".botones-abecedario > button").length; j++) {
+
+                if ((peliculaFiltrar[i]) == ($(".botones-abecedario > button").eq(j).text())) {
+                    peliculaFiltrada[i] = peliculaFiltrar[i];
+
+                } else if ((peliculaFiltrar[i]) == " ") {
+                    peliculaFiltrada[i] = peliculaFiltrar[i];
+                }
+            }
+
+        }
+
+        var peliculaReFiltrada = [];
+
+        var indice = 0;
+        console.log(peliculaFiltrada);
+        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
+
+        for (var i = 0; i < peliculaFiltrada.length; i++) {
+            if (peliculaFiltrada[i] != undefined) {
+                peliculaReFiltrada[i - indice] = peliculaFiltrada[i];
+            } else {
+                ++indice;
+            }
+        }
+
+        partidaActual[$nickname].toFind = peliculaReFiltrada;
+        console.log(partidaActual[$nickname].toFind);
+
+        for (var i = 0; i < partidaActual[$nickname].toFind.length; i++) {
+            if (partidaActual[$nickname].toFind[i] == " ") {
+                partidaActual[$nickname].finding[i] = " ";
+            } else {
+                partidaActual[$nickname].finding[i] = "-";
+            }
+        }
+        console.log(partidaActual[$nickname].finding);
+
+        if (reiniciar) {
+            localStorage.setItem("partida", JSON.stringify(partidaActual));
+            location.reload();
+        } else {
+            juego();
+        }
+    }
+
+
+
+
     function juego() {
         countDown();
         $("#vidas").text(partidaActual[$nickname].numeroVidas);
@@ -105,18 +278,6 @@ $(document).ready(function () {
 
         /* ELEMENTO A BUSCAR */
         $(".centrado").append($finding);
-
-        for (var i = 0; i < partidaActual[$nickname].toFind.length; i++) {
-            if (partidaActual[$nickname].finding.length > 0 + i) {
-
-            } else {
-                if (partidaActual[$nickname].toFind[i] == " ") {
-                    partidaActual[$nickname].finding[i] = " ";
-                } else {
-                    partidaActual[$nickname].finding[i] = "-";
-                }
-            }
-        }
 
         $finding.text(partidaActual[$nickname].finding.join(""));
         console.log(partidaActual);
@@ -141,13 +302,44 @@ $(document).ready(function () {
             $("#pista").attr("disabled", true);
         }
         $("#pista").on("click", function () {
-            partidaActual[$nickname].pista = false;
-            partidaActual[$nickname].tiempo -= 10;
+            console.log(partidaActual[$nickname].peliculaFiltrar);
             this.disabled = true;
+            var busqueda = [];
+            var indice = 0;
+            for (var i = 0; i < partidaActual[$nickname].peliculaFiltrar.length; i++) {
+                if (partidaActual[$nickname].peliculaFiltrar[i] != " ") {
+                    busqueda[i + indice] = partidaActual[$nickname].peliculaFiltrar[i];
+                } else {
+                    busqueda[i + indice] = "%";
+                    busqueda[i + 1 + indice] = "2";
+                    busqueda[i + 2 + indice] = "0";
+                    indice = indice + 2;
+                }
+            }
+            console.log(busqueda.join(""));
+            $.getJSON("http://www.omdbapi.com/?t=" + busqueda.join(""), function (result) {
+                console.log(result);
+                partidaActual[$nickname].pista = false;
+                if (result.Plot != "N/A") {
+                    partidaActual[$nickname].pistaTexto = result.Plot;
+                } else if (result.Actors != "N/A") {
+                    partidaActual[$nickname].pistaTexto = result.Actors;
+                } else {
+                    partidaActual[$nickname].pistaTexto = result.Released;
+                }
+
+                partidaActual[$nickname].tiempo -= 10;
+                console.log(partidaActual);
+
+                $(".centrado").append($("<p>", {
+                    "text": "Tu pista es: " + partidaActual[$nickname].pistaTexto
+                }));
+
+            });
+
         });
         /**/
     }
-
 
 
     function letraClick(evento) {
@@ -160,7 +352,7 @@ $(document).ready(function () {
                 partidaActual[$nickname].finding[i] = evento.innerHTML;
                 $finding.text(partidaActual[$nickname].finding.join(""));
 
-                if ($finding[0].innerText == partidaActual[$nickname].toFind) {
+                if (partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join("")) {
                     sumarGanada();
                 }
                 error = false;
@@ -201,6 +393,7 @@ $(document).ready(function () {
     }
     /**/
 
+
     function sumarGanada() {
         $(".centrado").append($("<p>"), {
             text: "VICTORIA"
@@ -227,7 +420,5 @@ $(document).ready(function () {
             $(".botones-abecedario > button").eq(i).attr("disabled", true);
         }
     }
-
-
 
 });
