@@ -4,13 +4,17 @@ var $finding = $("<p>", {
     "class": "finding"
 });
 
-localStorage.removeItem("partida");
+//localStorage.removeItem("partida");
 
 
 $(document).ready(function () {
     var aleatorio = Math.floor(Math.random() * ($(".botones-abecedario > button").length));
     console.log($(".botones-abecedario > button").eq(aleatorio).text());
-
+    
+    
+    $(".logged").hide();
+    
+    
     /* PARTIDA NUEVA */
     var partidaActual = {
         actual: "none"
@@ -25,13 +29,14 @@ $(document).ready(function () {
         console.log(partidaActual);
 
         $(".pide-usuario").remove();
+        $(".logged").show();
 
         if (partidaActual[$nickname] != undefined) {
             console.log("Jugador conocido")
         } else {
             console.log("Nuevo jugador");
             partidaActual[$nickname] = {};
-            partidaActual[$nickname].numeroVidas = 10;
+            partidaActual[$nickname].numeroVidas = 8;
             partidaActual[$nickname].tiempo = 100;
             partidaActual[$nickname].toFind = [];
             partidaActual[$nickname].finding = [];
@@ -57,9 +62,9 @@ $(document).ready(function () {
         if (!(partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join(""))) {
             ++partidaActual[$nickname].perdidas;
         }
-        partidaActual[$nickname].numeroVidas = 10;
+        partidaActual[$nickname].numeroVidas = 8;
         partidaActual[$nickname].tiempo = 100;
-        partidaActual[$nickname].toFind = paises[Math.floor(Math.random() * paises.length)];
+        partidaActual[$nickname].toFind = [];
         partidaActual[$nickname].finding = [];
         partidaActual[$nickname].pista = true;
         partidaActual[$nickname].letrasUsadas = [];
@@ -82,7 +87,7 @@ $(document).ready(function () {
             // TODO: función para preparar busqueda %20
             $nickname = $("#nickname-invitado").val();
             partidaActual[$nickname] = {};
-            partidaActual[$nickname].numeroVidas = 10;
+            partidaActual[$nickname].numeroVidas = 8;
             partidaActual[$nickname].tiempo = 100;
             partidaActual[$nickname].toFind = [];
             partidaActual[$nickname].finding = [];
@@ -99,6 +104,7 @@ $(document).ready(function () {
 
         if (partidaActual.actual != "none") {
             $(".pide-usuario").remove();
+            $(".logged").show();
             $nickname = partidaActual.actual;
             juego();
         }
@@ -160,46 +166,21 @@ $(document).ready(function () {
         partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
         console.log(peliculaFiltrar);
 
-        var peliculaFiltrada = [];
-        // TODO: NO BORRAR ESPECIALES, MOSTRARLOS DIRECTAMENTE
         for (var i = 0; i < peliculaFiltrar.length; i++) {
-
+            partidaActual[$nickname].toFind [i] = peliculaFiltrar[i];
+            
             for (var j = 0; j < $(".botones-abecedario > button").length; j++) {
 
-                if ((peliculaFiltrar[i]) == ($(".botones-abecedario > button").eq(j).text())) {
-                    peliculaFiltrada[i] = peliculaFiltrar[i];
+                if ((partidaActual[$nickname].toFind[i]) == ($(".botones-abecedario > button").eq(j).text())) {
+                    partidaActual[$nickname].finding[i] = "_";
+                    break;
 
-                } else if ((peliculaFiltrar[i]) == " ") {
-                    peliculaFiltrada[i] = peliculaFiltrar[i];
+                } else {
+                    partidaActual[$nickname].finding[i] = partidaActual[$nickname].toFind[i];
                 }
             }
-
         }
-
-        var peliculaReFiltrada = [];
-
-        var indice = 0;
-        console.log(peliculaFiltrada);
-        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
-
-        for (var i = 0; i < peliculaFiltrada.length; i++) {
-            if (peliculaFiltrada[i] != undefined) {
-                peliculaReFiltrada[i - indice] = peliculaFiltrada[i];
-            } else {
-                ++indice;
-            }
-        }
-
-        partidaActual[$nickname].toFind = peliculaReFiltrada;
         console.log(partidaActual[$nickname].toFind);
-
-        for (var i = 0; i < partidaActual[$nickname].toFind.length; i++) {
-            if (partidaActual[$nickname].toFind[i] == " ") {
-                partidaActual[$nickname].finding[i] = " ";
-            } else {
-                partidaActual[$nickname].finding[i] = "-";
-            }
-        }
         console.log(partidaActual[$nickname].finding);
 
         if (reiniciar) {
@@ -277,7 +258,7 @@ $(document).ready(function () {
         $("#jugador").text($nickname);
 
         /* ELEMENTO A BUSCAR */
-        $(".centrado").append($finding);
+        $(".juego").append($finding);
 
         $finding.text(partidaActual[$nickname].finding.join(""));
         console.log(partidaActual);
@@ -331,7 +312,7 @@ $(document).ready(function () {
                 partidaActual[$nickname].tiempo -= 10;
                 console.log(partidaActual);
 
-                $(".centrado").append($("<p>", {
+                $(".juego").append($("<p>", {
                     "text": "Tu pista es: " + partidaActual[$nickname].pistaTexto
                 }));
 
@@ -359,11 +340,13 @@ $(document).ready(function () {
             }
         }
 
-        if (error == true) {
+        if (error == true) {            
             if (partidaActual[$nickname].numeroVidas > 1) {
                 --partidaActual[$nickname].numeroVidas;
+                $("#vidas-hangman").attr("src","img/vida" + partidaActual[$nickname].numeroVidas + ".jpg");
             } else {
                 partidaActual[$nickname].numeroVidas = 0;
+                $("#vidas-hangman").attr("src","img/vida" + partidaActual[$nickname].numeroVidas + ".jpg");
                 sumarPerdida();
             }
             $("#vidas").text(partidaActual[$nickname].numeroVidas);

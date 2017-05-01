@@ -1,3 +1,16 @@
+h1 {
+    font-family: 'Finger Paint', cursive;
+    font-size: 100px;
+    padding-bottom: 20px;
+}
+
+h2 {
+    font-family: 'Finger Paint', cursive;
+    padding-bottom: 20px;
+}
+
+
+
 button {
     background-color: #d85454;
     border: none;
@@ -28,7 +41,7 @@ button#pista:disabled {
 }
 
 img#logo {
-    width: 600px;
+    width: 100%;
 }
 
 .centrado {
@@ -36,13 +49,8 @@ img#logo {
 }
 
 .finding {
-    margin-top: 42px;
     font-size: 60px;
     letter-spacing: 8px;
-}
-
-.botones-abecedario {
-    padding-top: 40px;
 }
 
 .contador-partidas{
@@ -51,15 +59,11 @@ img#logo {
     top: 20px;
 }
 
-.vidas {
-    padding-top: 150px;
-}
-
 .pide-usuario {
     background-color: white;
     position: fixed;
     z-index: 1;
-    height: 100%;
+    margin-top: 40px;
     width: 1200px;
     padding: 20px;
     border-radius: 5px;
@@ -68,7 +72,6 @@ img#logo {
 .pide-usuario p {
     font-weight: 600;
     font-size: 16px;
-    padding-top: 60px;
 }
 
 .pide-usuario input[type=text] {
@@ -139,6 +142,40 @@ img#logo {
     background-color: #45a049;
 }
 
+#cuadro-jugador {
+    text-align: left;
+}
 
+#cuadro-jugador button {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    background-color: #F6F7F9;
+    color: black;
+}
 
+.juego {
+    
+}
+
+.juego p {
+    color: white;
+    font-family: 'Finger Paint', cursive;
+}
+
+.botones-abecedario button {
+    font-family: 'Finger Paint', cursive;
+    background-color: transparent;
+    font-size: 30px;
+    width: 70px;
+}
+
+.botones-abecedario button:disabled {
+    text-decoration:line-through;
+    color: gray;
+}
+
+.bg-red{
+    background-color: #7b0710;
+}
 
