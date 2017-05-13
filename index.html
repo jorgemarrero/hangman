@@ -6,23 +6,13 @@
     <title>Hangman</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Finger+Paint" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
-    <div class="container">
+    <div class="container no-logged">
         <div class="row centrado">
-            <div class="row invita-usuario">
-                <p>Dinos el nombre de la persona que quieres retar</p>
-                <input type="text" id="nickname-invitado" name="firstname" placeholder="Su nombre de usuario..">
-                <input type="text" id="busqueda-invitado" name="firstname" placeholder="Película con la que quieres retar..">
-
-                <button id="a-jugar-invitado">¡A jugar!</button>
-            </div>
-
-
             <div class="row informacion">
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3
@@ -32,15 +22,7 @@
                         <h2>The best logic game</h2>
                     </div>
 
-                    <div class="col-md-2 col-md-offset-1
-                            col-sm-3 col-sm-offset-1
-                            logged" id="cuadro-jugador">
-                        <p>Jugador: <span id="jugador"></span></p>
-                        <p>Ganadas/Perdidas: <span id="historico-ganadas">0</span>/<span id="historico-perdidas">0</span></p>
-                        <p>Histórico: <span id="historico-total">TODO</span></p>
-                        <button id="retar">Retar amigo</button>
-                        <button id="close-sesion">Cerrar sesión</button>
-                    </div>
+
                 </div>
 
                 <div class="row pide-usuario">
@@ -49,57 +31,86 @@
 
                     <button id="a-jugar">¡A jugar!</button>
                 </div>
+                <div class="row invita-usuario">
+                    <p>Dinos el nombre de la persona que quieres retar</p>
+                    <input type="text" id="nickname-invitado" name="firstname" placeholder="Su nombre de usuario..">
+                    <input type="text" id="busqueda-invitado" name="firstname" placeholder="Película con la que quieres retar..">
+
+                    <button id="a-jugar-invitado">¡A jugar!</button>
+                </div>
             </div>
         </div>
     </div>
 
 
-    <div class="bg-red logged">
-        <div class="container juego centrado">
-            <div class="row">
-                <div class="col-lg-4 vidas">
-                    <img id="vidas-hangman" src="img/vida8.jpg">
+    <div class="logged">
+       
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Hangman</a>
                 </div>
-               
-                <div class="col-lg-2 botones-juego">
-                    <div class="timer"><i class="material-icons">alarm</i><span id="tiempo-restante"></span> segundos</div>
-                    <button id="pista">PISTA</button>
-                    <button id="rendirse">RENDIRSE</button>
-                    <button id="reiniciar">REINICIAR</button>
-                </div>
+                
+                <p class="navbar-text">Jugando como <span id="jugador"></span></p>
+                <p class="navbar-text">Racha: <span id="historico-total">TODO</span></p>
+                <p class="navbar-text">Ganadas/Perdidas: <span id="historico-ganadas">0</span>/<span id="historico-perdidas">0</span></p>
 
-                <div class="col-lg-6 botones-abecedario">
-                    <button>A</button>
-                    <button>B</button>
-                    <button>C</button>
-                    <button>D</button>
-                    <button>E</button>
-                    <button>F</button>
-                    <button>G</button>
-                    <button>H</button>
-                    <button>I</button>
-                    <button>J</button>
-                    <button>K</button>
-                    <button>L</button>
-                    <button>M</button>
-                    <button>N</button>
-                    <button>Ñ</button>
-                    <button>O</button>
-                    <button>P</button>
-                    <button>Q</button>
-                    <button>R</button>
-                    <button>S</button>
-                    <button>T</button>
-                    <button>U</button>
-                    <button>V</button>
-                    <button>W</button>
-                    <button>X</button>
-                    <button>Y</button>
-                    <button>Z</button>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Retar amigo</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="bg-red">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 vidas">
+                        <img id="vidas-hangman" src="img/vida8.jpg">
+                    </div>
+
+                    <div class="col-lg-2 botones-juego">
+                        <div class="timer"><i class="material-icons">alarm</i><span id="tiempo-restante"></span> segundos</div>
+                        <button id="pista">PISTA</button>
+                        <button id="rendirse">RENDIRSE</button>
+                        <button id="reiniciar">REINICIAR</button>
+                    </div>
+
+                    <div class="col-lg-6 botones-abecedario">
+                        <button>A</button>
+                        <button>B</button>
+                        <button>C</button>
+                        <button>D</button>
+                        <button>E</button>
+                        <button>F</button>
+                        <button>G</button>
+                        <button>H</button>
+                        <button>I</button>
+                        <button>J</button>
+                        <button>K</button>
+                        <button>L</button>
+                        <button>M</button>
+                        <button>N</button>
+                        <button>Ñ</button>
+                        <button>O</button>
+                        <button>P</button>
+                        <button>Q</button>
+                        <button>R</button>
+                        <button>S</button>
+                        <button>T</button>
+                        <button>U</button>
+                        <button>V</button>
+                        <button>W</button>
+                        <button>X</button>
+                        <button>Y</button>
+                        <button>Z</button>
+                    </div>
                 </div>
-                Tienes <span id="vidas">8</span> vidas
+                <div class="row to-find">
+                    
+                </div>
             </div>
         </div>
+
         <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
         <script type="text/javascript" src="script.js"></script>
 

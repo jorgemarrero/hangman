@@ -9,7 +9,14 @@ h2 {
     padding-bottom: 20px;
 }
 
+.navbar {
+    margin-bottom: 0;
+    font-family: 'Finger Paint', cursive;
+}
 
+.navbar .navbar-brand {
+    font-size: 25px;
+}
 
 button {
     background-color: #d85454;
@@ -158,9 +165,11 @@ img#logo {
     
 }
 
-.juego p {
+.to-find p {
     color: white;
     font-family: 'Finger Paint', cursive;
+    text-align: center;
+    padding-top: 20px
 }
 
 .botones-abecedario button {
@@ -180,6 +189,8 @@ img#logo {
 
 .bg-red{
     background-color: #7b0710;
+    padding-top: 50px;
+    padding-bottom: 100px;
 }
 
 .botones-juego {

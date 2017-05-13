@@ -28,7 +28,8 @@ $(document).ready(function () {
 
         console.log(partidaActual);
 
-        $(".pide-usuario").remove();
+        //$(".pide-usuario").remove();
+        $(".no-logged").remove();
         $(".logged").show();
 
         if (partidaActual[$nickname] != undefined) {
@@ -103,7 +104,8 @@ $(document).ready(function () {
         console.log(partidaActual);
 
         if (partidaActual.actual != "none") {
-            $(".pide-usuario").remove();
+            //$(".pide-usuario").remove();
+            $(".mo-logged").remove();
             $(".logged").show();
             $nickname = partidaActual.actual;
             juego();
@@ -258,7 +260,7 @@ $(document).ready(function () {
         $("#jugador").text($nickname);
 
         /* ELEMENTO A BUSCAR */
-        $(".juego").append($finding);
+        $(".to-find").append($finding);
 
         $finding.text(partidaActual[$nickname].finding.join(""));
         console.log(partidaActual);
@@ -312,7 +314,7 @@ $(document).ready(function () {
                 partidaActual[$nickname].tiempo -= 10;
                 console.log(partidaActual);
 
-                $(".juego").append($("<p>", {
+                $(".to-find").append($("<p>", {
                     "text": "Tu pista es: " + partidaActual[$nickname].pistaTexto
                 }));
 
