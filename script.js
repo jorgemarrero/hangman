@@ -4,7 +4,7 @@ var $finding = $("<p>", {
     "class": "finding"
 });
 
-//localStorage.removeItem("partida");
+localStorage.removeItem("partida");
 
 
 $(document).ready(function () {

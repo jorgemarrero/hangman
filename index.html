@@ -6,6 +6,8 @@
     <title>Hangman</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Finger+Paint" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
@@ -55,18 +57,18 @@
     <div class="bg-red logged">
         <div class="container juego centrado">
             <div class="row">
-                <div class="col-lg-5">
-                    <div class="col-lg-3">
-                        <div class="timer">Tiempo restante: <span id="tiempo-restante"></span> segundos</div>
-                        <button id="pista">PISTA</button>
-                        <button id="rendirse">RENDIRSE</button>
-                        <button id="reiniciar">REINICIAR</button>
-                    </div>
-                    <div class="col-lg-9 vidas">
-                        <img id="vidas-hangman" src="img/vida8.jpg">
-                    </div>
+                <div class="col-lg-4 vidas">
+                    <img id="vidas-hangman" src="img/vida8.jpg">
                 </div>
-                <div class="col-lg-6 col-lg-offset-1 botones-abecedario">
+               
+                <div class="col-lg-2 botones-juego">
+                    <div class="timer"><i class="material-icons">alarm</i><span id="tiempo-restante"></span> segundos</div>
+                    <button id="pista">PISTA</button>
+                    <button id="rendirse">RENDIRSE</button>
+                    <button id="reiniciar">REINICIAR</button>
+                </div>
+
+                <div class="col-lg-6 botones-abecedario">
                     <button>A</button>
                     <button>B</button>
                     <button>C</button>

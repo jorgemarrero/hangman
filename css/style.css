@@ -166,8 +166,11 @@ img#logo {
 .botones-abecedario button {
     font-family: 'Finger Paint', cursive;
     background-color: transparent;
-    font-size: 30px;
-    width: 70px;
+    font-size: 40px;
+    width: 50px;
+    padding-left: 0;
+    padding-right: 0;
+        
 }
 
 .botones-abecedario button:disabled {
@@ -177,5 +180,11 @@ img#logo {
 
 .bg-red{
     background-color: #7b0710;
+}
+
+.botones-juego {
+    color: white;
+    font-family: 'Finger Paint', cursive;
+    font-size: 20px;
 }
 
