@@ -4,7 +4,7 @@ var $finding = $("<p>", {
     "class": "finding"
 });
 
-localStorage.removeItem("partida");
+//localStorage.removeItem("partida");
 
 
 $(document).ready(function () {
@@ -14,6 +14,20 @@ $(document).ready(function () {
     
     $(".logged").hide();
     
+    /* COMPRUEBA SI EXISTE JUGANDO */
+    if (localStorage.getItem("partida") != null) {
+        partidaActual = JSON.parse(localStorage.getItem("partida"));
+        console.log(partidaActual);
+
+        if (partidaActual.actual != "none") {
+            //$(".pide-usuario").remove();
+            $(".no-logged").hide();
+            $(".logged").show();
+            $nickname = partidaActual.actual;
+            juego();
+        }
+    }
+    /**/
     
     /* PARTIDA NUEVA */
     var partidaActual = {
@@ -29,7 +43,7 @@ $(document).ready(function () {
         console.log(partidaActual);
 
         //$(".pide-usuario").remove();
-        $(".no-logged").remove();
+        $(".no-logged").hide();
         $(".logged").show();
 
         if (partidaActual[$nickname] != undefined) {
@@ -81,7 +95,10 @@ $(document).ready(function () {
         if (!(partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join(""))) {
             ++partidaActual[$nickname].perdidas;
         }
-
+        
+        partidaActual.actual = "none";
+        localStorage.setItem("partida", JSON.stringify(partidaActual));
+        location.reload();
         $(".invita-usuario").css("visibility", "visible");
 
         $("#a-jugar-invitado").on("click", function () {
@@ -97,21 +114,6 @@ $(document).ready(function () {
             peliculaDB(false, true);
         });
     });
-
-    /* COMPRUEBA SI EXISTE JUGANDO */
-    if (localStorage.getItem("partida") != null) {
-        partidaActual = JSON.parse(localStorage.getItem("partida"));
-        console.log(partidaActual);
-
-        if (partidaActual.actual != "none") {
-            //$(".pide-usuario").remove();
-            $(".mo-logged").remove();
-            $(".logged").show();
-            $nickname = partidaActual.actual;
-            juego();
-        }
-    }
-    /**/
 
 
     function peliculaDB(reiniciar, retar) {
@@ -380,9 +382,7 @@ $(document).ready(function () {
 
 
     function sumarGanada() {
-        $(".centrado").append($("<p>"), {
-            text: "VICTORIA"
-        });
+        $(".to-find").append("<p class='texto-resultado'>¡Felicidades! ¡Has ganado!</p>");
         alert("Has ganado");
         ++partidaActual[$nickname].ganadas;
         $("#historico-ganadas").text(partidaActual[$nickname].ganadas);

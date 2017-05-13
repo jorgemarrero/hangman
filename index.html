@@ -56,8 +56,8 @@
                 <p class="navbar-text">Ganadas/Perdidas: <span id="historico-ganadas">0</span>/<span id="historico-perdidas">0</span></p>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Retar amigo</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+                    <li><a href="#" id="retar"><span class="glyphicon glyphicon-user"></span> Retar amigo</a></li>
+                    <li><a href="#" id="close-sesion"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
                 </ul>
             </div>
         </nav>
@@ -68,14 +68,8 @@
                         <img id="vidas-hangman" src="img/vida8.jpg">
                     </div>
 
-                    <div class="col-lg-2 botones-juego">
-                        <div class="timer"><i class="material-icons">alarm</i><span id="tiempo-restante"></span> segundos</div>
-                        <button id="pista">PISTA</button>
-                        <button id="rendirse">RENDIRSE</button>
-                        <button id="reiniciar">REINICIAR</button>
-                    </div>
-
-                    <div class="col-lg-6 botones-abecedario">
+                    <div class="col-lg-6 col col-lg-offset-2">
+                       <div class="botones-abecedario">
                         <button>A</button>
                         <button>B</button>
                         <button>C</button>
@@ -103,6 +97,15 @@
                         <button>X</button>
                         <button>Y</button>
                         <button>Z</button>
+                    </div>
+                    <div class="botones-juego">
+                        <button class="btn" id="pista">PISTA</button>
+                        <button class="btn" id="rendirse">RENDIRSE</button>
+                        <button class="btn" id="reiniciar">REINICIAR</button>
+                        <span class="timer text-right">Tiempo restante: <span id="tiempo-restante"></span> s</span>
+                    </div>
+                        
+ 
                     </div>
                 </div>
                 <div class="row to-find">
