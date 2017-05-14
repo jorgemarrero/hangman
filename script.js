@@ -64,6 +64,7 @@ $(document).ready(function () {
             partidaActual[$nickname].letrasUsadas = [];
             partidaActual[$nickname].ganadas = 0;
             partidaActual[$nickname].perdidas = 0;
+            partidaActual[$nickname].streak = [];
             console.log(partidaActual);
         }
 
@@ -105,6 +106,9 @@ $(document).ready(function () {
         partidaActual[$nickname].pista = true;
         partidaActual[$nickname].rendirse = true;
         partidaActual[$nickname].letrasUsadas = [];
+        partidaActual[$nickname].ganadas = 0;
+        partidaActual[$nickname].perdidas = 0;
+        partidaActual[$nickname].streak = [];
         peliculaDB(false, true);
         localStorage.setItem("partida", JSON.stringify(partidaActual));
     });
@@ -268,6 +272,7 @@ $(document).ready(function () {
         $("#vidas").text(partidaActual[$nickname].numeroVidas);
         $("#historico-ganadas").text(partidaActual[$nickname].ganadas);
         $("#historico-perdidas").text(partidaActual[$nickname].perdidas);
+        $("#historico-total").text(partidaActual[$nickname].streak.join("-"));
         $("#jugador").text($nickname);
 
         /* ELEMENTO A BUSCAR */
@@ -294,14 +299,12 @@ $(document).ready(function () {
 
         /* RENDIRSE */
         if (!partidaActual[$nickname].rendirse) {
-            $("#rendirse").attr("disabled", true);
             sumarPerdida(true);
         }
         $("#rendirse").on("click", function () {
             partidaActual[$nickname].rendirse = false;
             partidaActual[$nickname].pista = false;
             this.disabled = true;
-            $("#pista").prop("disabled", true);
             sumarPerdida(false);
         });
         
@@ -346,7 +349,7 @@ $(document).ready(function () {
                 console.log(partidaActual);
 
                 $(".to-find").append($("<p>", {
-                    "text": "Tu pista es: " + partidaActual[$nickname].pistaTexto
+                    "text": "Your hint is: " + partidaActual[$nickname].pistaTexto
                 }));
 
             });
@@ -412,29 +415,51 @@ $(document).ready(function () {
 
 
     function sumarGanada() {
-        $(".to-find").append("<p class='texto-resultado'>¡Felicidades! ¡Has ganado!</p>");
+        // TODO: reload igual que es sumarPerdida
+        
+        $(".to-find").append("<p class='texto-resultado'>Congratulations! You win!</p>");
         ++partidaActual[$nickname].ganadas;
         $("#historico-ganadas").text(partidaActual[$nickname].ganadas);
-        clearInterval(timer);
-        localStorage.setItem("partida", JSON.stringify(partidaActual));
+        
+        if (partidaActual[$nickname].streak.length >= 5) partidaActual[$nickname].streak.splice(0, 1);
+        partidaActual[$nickname].streak.push("W");
+        
         finPartida();
     }
 
     function sumarPerdida(reload) {
-        $(".to-find").append("<p class='texto-resultado'>¡Lo siento! ¡Has perdido!</p>");
-        if (!reload) ++partidaActual[$nickname].perdidas;
+        $(".to-find").append("<p class='texto-resultado'>I am sorry! You lose!</p>");
+        
+        if (!reload) {
+            ++partidaActual[$nickname].perdidas;
+        }
+        else {
+            if (partidaActual[$nickname].streak.length >= 5) partidaActual[$nickname].streak.splice(0, 1);
+            partidaActual[$nickname].streak.push("L");
+        }
         $("#historico-perdidas").text(partidaActual[$nickname].perdidas);
-        clearInterval(timer);
 
         $finding.text(partidaActual[$nickname].peliculaFiltrar);
         partidaActual[$nickname].finding = partidaActual[$nickname].toFind;
 
         $("#vidas-hangman").attr("src", "img/vida0.jpg");
-        localStorage.setItem("partida", JSON.stringify(partidaActual));
+        
+
+        
         finPartida();
     }
 
     function finPartida() {
+        console.log(partidaActual[$nickname].streak.length);
+        console.log(partidaActual[$nickname].streak);
+        
+        $("#historico-total").text(partidaActual[$nickname].streak.join("-"));
+        $("#reiniciar").removeAttr("disabled");
+        $("#rendirse").attr("disabled", true);
+        $("#pista").prop("disabled", true);
+        
+        clearInterval(timer);
+        localStorage.setItem("partida", JSON.stringify(partidaActual));
         for (var i = 0; i < $(".botones-abecedario > button").length; i++) {
             $(".botones-abecedario > button").eq(i).attr("disabled", true);
         }
