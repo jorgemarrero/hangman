@@ -3,6 +3,9 @@ var timer;
 var $finding = $("<p>", {
     "class": "finding"
 });
+var partidaActual = {
+        actual: "none"
+}
 
 //localStorage.removeItem("partida");
 
@@ -13,13 +16,34 @@ $(document).ready(function () {
 
 
     $(".logged").hide();
-    /* PARTIDA NUEVA */
-    var partidaActual = {
-        actual: "none"
-    }
-    /**/
 
-    /* COMPRUEBA SI EXISTE JUGANDO */
+    function prepareToPlay() {
+        partidaActual.actual = $nickname;
+
+        $(".no-logged").hide();
+        $(".logged").show();
+
+        if (partidaActual[$nickname] == undefined) {
+            partidaActual[$nickname] = {};
+            partidaActual[$nickname].ganadas = 0;
+            partidaActual[$nickname].perdidas = 0;
+            partidaActual[$nickname].streak = [];  
+        }
+
+        partidaActual[$nickname].numeroVidas = 8;
+        partidaActual[$nickname].tiempo = 50;
+        partidaActual[$nickname].toFind = [];
+        partidaActual[$nickname].finding = [];
+        partidaActual[$nickname].pista = true;
+        partidaActual[$nickname].rendirse = true;
+        partidaActual[$nickname].ganado = false;
+        partidaActual[$nickname].perdido = false;
+        partidaActual[$nickname].letrasUsadas = [];
+        
+    }
+    
+    /*************************** COMPRUEBA SI EXISTE JUGANDO *******************************************/
+    /***************************************************************************************************/
     if (localStorage.getItem("partida") != null) {
         partidaActual = JSON.parse(localStorage.getItem("partida"));
         console.log(partidaActual);
@@ -34,45 +58,31 @@ $(document).ready(function () {
                 $nickname = partidaActual.actual;
                 juego();
             }
-
         }
     }
-    /**/
-
-
+    
+    /***************************************************************************************************/
+    
+    
+    /********************************************* BUTTONS *********************************************/
+    /***************************************************************************************************/
     /* A JUGAR */
     $("#a-jugar").on("click", function () {
         $nickname = $("#nickname").val();
-        partidaActual.actual = $nickname;
-
-        console.log(partidaActual);
-
-        $(".no-logged").hide();
-        $(".logged").show();
-
-        if (partidaActual[$nickname] != undefined) {
-            console.log("Jugador conocido")
-        } else {
-            console.log("Nuevo jugador");
-            partidaActual[$nickname] = {};
-            partidaActual[$nickname].numeroVidas = 8;
-            partidaActual[$nickname].tiempo = 100;
-            partidaActual[$nickname].toFind = [];
-            partidaActual[$nickname].finding = [];
-            partidaActual[$nickname].pista = true;
-            partidaActual[$nickname].rendirse = true;
-            partidaActual[$nickname].letrasUsadas = [];
-            partidaActual[$nickname].ganadas = 0;
-            partidaActual[$nickname].perdidas = 0;
-            partidaActual[$nickname].streak = [];
-            console.log(partidaActual);
-        }
-
+        prepareToPlay();
         peliculaDB(false, false);
     });
+    
+    $("#a-jugar-invitado").on("click", function () {  
+        $nickname = $("#nickname-invitado").val();
+        prepareToPlay();
+        peliculaDB(false, true);
+    });
+    /**/
 
     /* CERRAR SESIÓN */
     $("#close-sesion").on("click", function () {
+        checkLose();
         partidaActual.actual = "none";
         localStorage.setItem("partida", JSON.stringify(partidaActual));
         location.reload();
@@ -80,73 +90,46 @@ $(document).ready(function () {
     
     /* RETAR */
     $("#retar").on("click", function () {
-        console.log("SIIIIIIII");
-        if (!(partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join(""))) {
-            ++partidaActual[$nickname].perdidas;
-        }
-
+        checkLose();
         partidaActual.actual = "reto";
         localStorage.setItem("partida", JSON.stringify(partidaActual));
         location.reload();
 
     });
-
-    $("#a-jugar-invitado").on("click", function () {
-        // TODO: función para preparar busqueda %20
-        $(".no-logged").hide();
-        $(".logged").show();
-        
-        $nickname = $("#nickname-invitado").val();
-        partidaActual.actual = $nickname;
-        partidaActual[$nickname] = {};
-        partidaActual[$nickname].numeroVidas = 8;
-        partidaActual[$nickname].tiempo = 100;
-        partidaActual[$nickname].toFind = [];
-        partidaActual[$nickname].finding = [];
-        partidaActual[$nickname].pista = true;
-        partidaActual[$nickname].rendirse = true;
-        partidaActual[$nickname].letrasUsadas = [];
-        partidaActual[$nickname].ganadas = 0;
-        partidaActual[$nickname].perdidas = 0;
-        partidaActual[$nickname].streak = [];
-        peliculaDB(false, true);
-        localStorage.setItem("partida", JSON.stringify(partidaActual));
+    
+    /* TRY RESOLVE */
+    $("#try-resolve").popover({ 
+        html : true,
+        title: function() {
+          return $("#popover-head").html();
+        },
+        content: function() {
+          return $("#popover-content").html();
+        }
     });
-
+    
+    
     /* REINICIAR */
     $("#reiniciar").on("click", function () {
+        checkLose();
+        prepareToPlay();
+        peliculaDB(true, false);
+    });
+        
+    function checkLose() {
         if (!(partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join(""))) {
             ++partidaActual[$nickname].perdidas;
         }
-        partidaActual[$nickname].numeroVidas = 8;
-        partidaActual[$nickname].tiempo = 100;
-        partidaActual[$nickname].toFind = [];
-        partidaActual[$nickname].finding = [];
-        partidaActual[$nickname].pista = true;
-        partidaActual[$nickname].rendirse = true;
-        partidaActual[$nickname].letrasUsadas = [];
-        peliculaDB(true, false);
-        localStorage.setItem("partida", JSON.stringify(partidaActual));
-    });
+    }
 
+    /***************************************************************************************************/
+    
+    
+    /****************************** TAKE FILM FROM API & FILTER IT *************************************/
+    /***************************************************************************************************/
     function peliculaDB(reiniciar, retar) {
         if (retar) {
-            var busqueda = [];
-            var indice = 0;
-            console.log($("#busqueda-invitado").val());
-            for (var i = 0; i < ($("#busqueda-invitado").val()).length; i++) {
-
-                if (($("#busqueda-invitado").val()[i]) != " ") {
-                    busqueda[i + indice] = ($("#busqueda-invitado").val()[i]);
-                } else {
-                    busqueda[i + indice] = "%";
-                    busqueda[i + 1 + indice] = "2";
-                    busqueda[i + 2 + indice] = "0";
-                    indice = indice + 2;
-                }
-            }
-            console.log(busqueda.join(""));
-            $.getJSON("http://www.omdbapi.com/?t=" + busqueda.join(""), function (result) {
+            $.getJSON("http://www.omdbapi.com/?t=" + prepareSearch($("#busqueda-invitado").val()), function (result) {
                 console.log(result);
                 filtrandoPeliculas(result.Title, reiniciar);
                 $(".invita-usuario").css("visibility", "hidden");
@@ -178,7 +161,6 @@ $(document).ready(function () {
     }
 
     function filtrandoPeliculas(peliculaFiltrar, reiniciar) {
-
         peliculaFiltrar = peliculaFiltrar.toUpperCase();
         partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
         console.log(peliculaFiltrar);
@@ -191,15 +173,12 @@ $(document).ready(function () {
                 if ((partidaActual[$nickname].toFind[i]) == ($(".botones-abecedario > button").eq(j).text())) {
                     partidaActual[$nickname].finding[i] = "_";
                     break;
-
                 } else {
                     partidaActual[$nickname].finding[i] = partidaActual[$nickname].toFind[i];
                 }
             }
         }
-        console.log(partidaActual[$nickname].toFind);
-        console.log(partidaActual[$nickname].finding);
-
+        
         if (reiniciar) {
             localStorage.setItem("partida", JSON.stringify(partidaActual));
             location.reload();
@@ -207,80 +186,29 @@ $(document).ready(function () {
             juego();
         }
     }
-
-    function filtrandoPeliculasDos(peliculaFiltrar, reiniciar) {
-
-        peliculaFiltrar = peliculaFiltrar.toUpperCase();
-        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
-        console.log(peliculaFiltrar);
-
-        var peliculaFiltrada = [];
-        // TODO: NO BORRAR ESPECIALES, MOSTRARLOS DIRECTAMENTE
-        for (var i = 0; i < peliculaFiltrar.length; i++) {
-
-            for (var j = 0; j < $(".botones-abecedario > button").length; j++) {
-
-                if ((peliculaFiltrar[i]) == ($(".botones-abecedario > button").eq(j).text())) {
-                    peliculaFiltrada[i] = peliculaFiltrar[i];
-
-                } else if ((peliculaFiltrar[i]) == " ") {
-                    peliculaFiltrada[i] = peliculaFiltrar[i];
-                }
-            }
-
-        }
-
-        var peliculaReFiltrada = [];
-
-        var indice = 0;
-        console.log(peliculaFiltrada);
-        partidaActual[$nickname].peliculaFiltrar = peliculaFiltrar;
-
-        for (var i = 0; i < peliculaFiltrada.length; i++) {
-            if (peliculaFiltrada[i] != undefined) {
-                peliculaReFiltrada[i - indice] = peliculaFiltrada[i];
-            } else {
-                ++indice;
-            }
-        }
-
-        partidaActual[$nickname].toFind = peliculaReFiltrada;
-        console.log(partidaActual[$nickname].toFind);
-
-        for (var i = 0; i < partidaActual[$nickname].toFind.length; i++) {
-            if (partidaActual[$nickname].toFind[i] == " ") {
-                partidaActual[$nickname].finding[i] = " ";
-            } else {
-                partidaActual[$nickname].finding[i] = "-";
-            }
-        }
-        console.log(partidaActual[$nickname].finding);
-
-        if (reiniciar) {
-            localStorage.setItem("partida", JSON.stringify(partidaActual));
-            location.reload();
-        } else {
-            juego();
-        }
-    }
-
-
-
-
+    /***************************************************************************************************/
+    
+    
+    /*************************************** INTERACTION ***********************************************/
+    /***************************************************************************************************/
     function juego() {
-        countDown();
+        
         $("#vidas").text(partidaActual[$nickname].numeroVidas);
         $("#historico-ganadas").text(partidaActual[$nickname].ganadas);
         $("#historico-perdidas").text(partidaActual[$nickname].perdidas);
         $("#historico-total").text(partidaActual[$nickname].streak.join("-"));
+        $("#tiempo-restante").text(partidaActual[$nickname].tiempo);
         $("#jugador").text($nickname);
 
-        /* ELEMENTO A BUSCAR */
         $(".to-find").append($finding);
 
         $finding.text(partidaActual[$nickname].finding.join(""));
         console.log(partidaActual);
-        /**/
+        
+        /* CHECK IF IS A RELOAD */
+        if (partidaActual[$nickname].ganado) sumarGanada(true);
+        else if (partidaActual[$nickname].perdido) sumarPerdida(true);
+        else countDown();
 
         /* PRUEBA LETRAS Y BUSCA RESULTADO */
         for (var i = 0; i < $(".botones-abecedario > button").length; i++) {
@@ -294,13 +222,9 @@ $(document).ready(function () {
                 }
             }
         }
-        /**/
-        
+
 
         /* RENDIRSE */
-        if (!partidaActual[$nickname].rendirse) {
-            sumarPerdida(true);
-        }
         $("#rendirse").on("click", function () {
             partidaActual[$nickname].rendirse = false;
             partidaActual[$nickname].pista = false;
@@ -311,30 +235,14 @@ $(document).ready(function () {
         /* PISTA */
         if (!partidaActual[$nickname].pista) {
             $("#pista").attr("disabled", true);
-            mostrarPista();
+            $(".to-find .whats-movie").append($("<span>", {
+                "text": " - Your hint is: " + partidaActual[$nickname].pistaTexto
+            }));
         }
         $("#pista").on("click", function () {
-            mostrarPista();
-        });
-        /**/
-
-        function mostrarPista() {
-            console.log(partidaActual[$nickname].peliculaFiltrar);
             $("#pista").prop("disabled", true);
-            var busqueda = [];
-            var indice = 0;
-            for (var i = 0; i < partidaActual[$nickname].peliculaFiltrar.length; i++) {
-                if (partidaActual[$nickname].peliculaFiltrar[i] != " ") {
-                    busqueda[i + indice] = partidaActual[$nickname].peliculaFiltrar[i];
-                } else {
-                    busqueda[i + indice] = "%";
-                    busqueda[i + 1 + indice] = "2";
-                    busqueda[i + 2 + indice] = "0";
-                    indice = indice + 2;
-                }
-            }
-            console.log(busqueda.join(""));
-            $.getJSON("http://www.omdbapi.com/?t=" + busqueda.join(""), function (result) {
+
+            $.getJSON("http://www.omdbapi.com/?t=" + prepareSearch(partidaActual[$nickname].peliculaFiltrar), function (result) {
                 console.log(result);
                 partidaActual[$nickname].pista = false;
                 if (result.Plot != "N/A") {
@@ -348,16 +256,15 @@ $(document).ready(function () {
                 partidaActual[$nickname].tiempo -= 10;
                 console.log(partidaActual);
 
-                $(".to-find").append($("<p>", {
-                    "text": "Your hint is: " + partidaActual[$nickname].pistaTexto
+                $(".to-find .whats-movie").append($("<span>", {
+                    "text": " - Your hint is: " + partidaActual[$nickname].pistaTexto
                 }));
 
             });
-
-        }
+        });
     }
 
-
+    /********************************   /////////    \\\\\\\\\\   **************************************/
     function letraClick(evento) {
         var error = true;
         console.log(evento.innerHTML);
@@ -369,7 +276,7 @@ $(document).ready(function () {
                 $finding.text(partidaActual[$nickname].finding.join(""));
 
                 if (partidaActual[$nickname].finding.join("") == partidaActual[$nickname].toFind.join("")) {
-                    sumarGanada();
+                    sumarGanada(false);
                 }
                 error = false;
             }
@@ -391,16 +298,13 @@ $(document).ready(function () {
         partidaActual[$nickname].letrasUsadas.push(evento.innerHTML);
         console.log(partidaActual);
     }
-    /**/
-
-    /* TIEMPO RESTANTE */
+    
+    /********************************   /////////    \\\\\\\\\\   **************************************/
     function countDown() {
         $tiempoRestante = $("#tiempo-restante");
         $tiempoRestante.text(partidaActual[$nickname].tiempo);
-        console.log(partidaActual);
 
         timer = setInterval(function () {
-            //console.log(partidaActual);
             if (partidaActual[$nickname].tiempo == 0) {
                 sumarPerdida(false);
                 clearInterval(timer);
@@ -411,32 +315,36 @@ $(document).ready(function () {
             localStorage.setItem("partida", JSON.stringify(partidaActual));
         }, 1000);
     }
-    /**/
-
-
-    function sumarGanada() {
-        // TODO: reload igual que es sumarPerdida
-        
+    /***************************************************************************************************/
+    
+    
+    /*************************************** GAME-OVER ***********************************************/
+    /***************************************************************************************************/
+    function sumarGanada(reload) {    
         $(".to-find").append("<p class='texto-resultado'>Congratulations! You win!</p>");
-        ++partidaActual[$nickname].ganadas;
+        partidaActual[$nickname].ganado = true;
+        
+        if (!reload) {
+            ++partidaActual[$nickname].ganadas;
+            if (partidaActual[$nickname].streak.length >= 5) partidaActual[$nickname].streak.splice(0, 1);
+            partidaActual[$nickname].streak.push("W");
+        }
+
         $("#historico-ganadas").text(partidaActual[$nickname].ganadas);
-        
-        if (partidaActual[$nickname].streak.length >= 5) partidaActual[$nickname].streak.splice(0, 1);
-        partidaActual[$nickname].streak.push("W");
-        
+
         finPartida();
     }
 
     function sumarPerdida(reload) {
         $(".to-find").append("<p class='texto-resultado'>I am sorry! You lose!</p>");
+        partidaActual[$nickname].perdido = true;
         
         if (!reload) {
             ++partidaActual[$nickname].perdidas;
-        }
-        else {
             if (partidaActual[$nickname].streak.length >= 5) partidaActual[$nickname].streak.splice(0, 1);
             partidaActual[$nickname].streak.push("L");
         }
+
         $("#historico-perdidas").text(partidaActual[$nickname].perdidas);
 
         $finding.text(partidaActual[$nickname].peliculaFiltrar);
@@ -444,15 +352,10 @@ $(document).ready(function () {
 
         $("#vidas-hangman").attr("src", "img/vida0.jpg");
         
-
-        
         finPartida();
     }
 
-    function finPartida() {
-        console.log(partidaActual[$nickname].streak.length);
-        console.log(partidaActual[$nickname].streak);
-        
+    function finPartida() {        
         $("#historico-total").text(partidaActual[$nickname].streak.join("-"));
         $("#reiniciar").removeAttr("disabled");
         $("#rendirse").attr("disabled", true);
@@ -464,5 +367,24 @@ $(document).ready(function () {
             $(".botones-abecedario > button").eq(i).attr("disabled", true);
         }
     }
-
+    
 });
+
+
+function prepareSearch(toSearch) {
+    var busqueda = [];
+    var indice = 0;
+
+    for (var i = 0; i < toSearch.length; i++) {
+        if (toSearch[i] != " ") {
+            busqueda[i + indice] = toSearch[i];
+        } else {
+            busqueda[i + indice] = "%";
+            busqueda[i + 1 + indice] = "2";
+            busqueda[i + 2 + indice] = "0";
+            indice = indice + 2;
+        }
+    }
+    
+    return busqueda.join("");
+}

@@ -17,7 +17,6 @@
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3
                             col-sm-7 col-sm-offset-1">
-                        <!--                        <img src="img/logo.jpg" id="logo">-->
                         <h1>Hangman</h1>
                         <h2>The best logic game, this time about movies</h2>
                     </div>
@@ -44,13 +43,13 @@
 
 
     <div class="logged">
-       
+
         <nav class="navbar navbar-default">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">Hangman</a>
                 </div>
-                
+
                 <p class="navbar-text">Playing as <span id="jugador"></span></p>
                 <p class="navbar-text">Streak: <span id="historico-total">TODO</span></p>
                 <p class="navbar-text">Win/Lose: <span id="historico-ganadas">0</span>/<span id="historico-perdidas">0</span></p>
@@ -61,15 +60,15 @@
                 </ul>
             </div>
         </nav>
-        <div class="bg-red">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 vidas">
-                        <img id="vidas-hangman" src="img/vida8.jpg">
-                    </div>
 
-                    <div class="col-lg-6 col col-lg-offset-2">
-                       <div class="botones-abecedario">
+        <div class="container game">
+            <div class="row">
+                <div class="col-lg-4 vidas">
+                    <img id="vidas-hangman" src="img/vida8.jpg">
+                </div>
+
+                <div class="col-lg-6 col col-lg-offset-2">
+                    <div class="botones-abecedario">
                         <button>A</button>
                         <button>B</button>
                         <button>C</button>
@@ -100,27 +99,33 @@
                     </div>
                     <div class="botones-juego">
                         <button class="btn" id="pista">HINT</button>
+
+                        <button class="btn btn-success" id="try-resolve">TRY RESOLVE</button>
+                        <div id="popover-head" class="hide">If you fail you will lose 2 lives</div>
+                        <div id="popover-content" class="hide">
+                            <form>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter a movie ...">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">Try!</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
                         <button class="btn" id="rendirse">DEFEAT</button>
                         <button class="btn" id="reiniciar" disabled="disabled">RESTART</button>
                         <span class="timer text-right">Time left: <span id="tiempo-restante"></span> s</span>
                     </div>
-                        
-                    </div>
+
                 </div>
-                <div class="row to-find">
-                    <p>What's the movie?</p>
-                </div>
+            </div>
+            <div class="row to-find">
+                <p class="whats-movie">What's the movie?</p>
             </div>
         </div>
-<!--
-        <footer class="footer">
-            <div class="container">
-                <p class="text-muted">Desarrollado por Jorge Marrero</p>
-            </div>
-                
-        </footer>
--->
+
         <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="script.js"></script>
 
     </div>
