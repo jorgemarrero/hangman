@@ -1,23 +1,46 @@
+body {
+    background-color: #7b0710;
+}
+
 h1 {
     font-family: 'Finger Paint', cursive;
     font-size: 100px;
     padding-bottom: 20px;
+    color: white;
 }
 
 h2 {
     font-family: 'Finger Paint', cursive;
     padding-bottom: 20px;
+    color: white;
 }
 
 .navbar {
     margin-bottom: 0;
     font-family: 'Finger Paint', cursive;
+    border-radius: 0;
 }
+
 
 .navbar .navbar-brand {
     font-size: 25px;
 }
 
+
+.popover-title {
+    color: black; 
+    
+}
+
+/* Popover Body */
+.popover-content {
+    background-color: #398439;
+    color: #FFFFFF;
+    border-radius: 6px;
+}
+.popover-content .btn {
+    margin-top: 0;
+}
 
 button {
     background-color: #d85454;
@@ -192,10 +215,9 @@ img#logo {
     color: gray;
 }
 
-.bg-red{
-    background-color: #7b0710;
+.game{
     padding-top: 50px;
-    padding-bottom: 100px;
+    padding-bottom: 50px;
 }
 
 .botones-juego {
