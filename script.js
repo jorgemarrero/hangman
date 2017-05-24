@@ -6,6 +6,7 @@ var $finding = $("<p>", {
 var partidaActual = {
         actual: "none"
 }
+var API_KEY = "3370463f";
 
 //localStorage.removeItem("partida");
 
@@ -129,14 +130,14 @@ $(document).ready(function () {
     /***************************************************************************************************/
     function peliculaDB(reiniciar, retar) {
         if (retar) {
-            $.getJSON("http://www.omdbapi.com/?t=" + prepareSearch($("#busqueda-invitado").val()), function (result) {
+            $.getJSON("http://www.omdbapi.com/?apikey=" + API_KEY + "&t=" + prepareSearch($("#busqueda-invitado").val()), function (result) {
                 console.log(result);
                 filtrandoPeliculas(result.Title, reiniciar);
                 $(".invita-usuario").css("visibility", "hidden");
             });
 
         } else {
-            $.when($.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
+            $.when($.getJSON("http://www.omdbapi.com/?apikey=" + API_KEY + "&s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
                 console.log('sucess');
                 console.log(result);
                 console.log(result.totalResults);
@@ -147,7 +148,7 @@ $(document).ready(function () {
             })).then(function () {
                 console.log('get JSON ready!');
 
-                $.getJSON("http://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
+                $.getJSON("http://www.omdbapi.com/?apikey=" + API_KEY + "&s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
                     console.log(result);
                     console.log(Math.floor(Math.random() * (result.Search.length)));
                     var peliculaFiltrar = result.Search[Math.floor(Math.random() * (result.Search.length))].Title;
@@ -242,7 +243,7 @@ $(document).ready(function () {
         $("#pista").on("click", function () {
             $("#pista").prop("disabled", true);
 
-            $.getJSON("http://www.omdbapi.com/?t=" + prepareSearch(partidaActual[$nickname].peliculaFiltrar), function (result) {
+            $.getJSON("http://www.omdbapi.com/?apikey=" + API_KEY + "&t=" + prepareSearch(partidaActual[$nickname].peliculaFiltrar), function (result) {
                 console.log(result);
                 partidaActual[$nickname].pista = false;
                 if (result.Plot != "N/A") {
