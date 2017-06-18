@@ -7,6 +7,8 @@ var partidaActual = {
         actual: "none"
 }
 
+var API_KEY_OMDB = "3370463f";
+
 //localStorage.removeItem("partida");
 
 
@@ -129,14 +131,14 @@ $(document).ready(function () {
     /***************************************************************************************************/
     function peliculaDB(reiniciar, retar) {
         if (retar) {
-            $.getJSON("https://www.omdbapi.com/?t=" + prepareSearch($("#busqueda-invitado").val()), function (result) {
+            $.getJSON("https://www.omdbapi.com/?apikey=" + API_KEY_OMDB + "&t=" + prepareSearch($("#busqueda-invitado").val()), function (result) {
                 console.log(result);
                 filtrandoPeliculas(result.Title, reiniciar);
                 $(".invita-usuario").css("visibility", "hidden");
             });
 
         } else {
-            $.when($.getJSON("https://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
+            $.when($.getJSON("https://www.omdbapi.com/?apikey=" + API_KEY_OMDB + "&s=" + ($(".botones-abecedario > button").eq(aleatorio).text()), function (result) {
                 console.log('sucess');
                 console.log(result);
                 console.log(result.totalResults);
@@ -147,7 +149,7 @@ $(document).ready(function () {
             })).then(function () {
                 console.log('get JSON ready!');
 
-                $.getJSON("https://www.omdbapi.com/?s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
+                $.getJSON("https://www.omdbapi.com/?apikey=" + API_KEY_OMDB + "&s=" + ($(".botones-abecedario > button").eq(aleatorio).text()) + "&page=" + paginas, function (result) {
                     console.log(result);
                     console.log(Math.floor(Math.random() * (result.Search.length)));
                     var peliculaFiltrar = result.Search[Math.floor(Math.random() * (result.Search.length))].Title;
@@ -242,7 +244,7 @@ $(document).ready(function () {
         $("#pista").on("click", function () {
             $("#pista").prop("disabled", true);
 
-            $.getJSON("https://www.omdbapi.com/?t=" + prepareSearch(partidaActual[$nickname].peliculaFiltrar), function (result) {
+            $.getJSON("https://www.omdbapi.com/?apikey=" + API_KEY_OMDB + "&t=" + prepareSearch(partidaActual[$nickname].peliculaFiltrar), function (result) {
                 console.log(result);
                 partidaActual[$nickname].pista = false;
                 if (result.Plot != "N/A") {
@@ -388,3 +390,4 @@ function prepareSearch(toSearch) {
     
     return busqueda.join("");
 }
+
