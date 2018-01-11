@@ -7,7 +7,7 @@ var partidaActual = {
         actual: "none"
 }
 
-var API_KEY_OMDB = "3370463f";
+var API_KEY_OMDB = "a3a04456";
 
 //localStorage.removeItem("partida");
 
